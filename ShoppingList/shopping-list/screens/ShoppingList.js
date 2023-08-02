@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import List from "./List";
 import Alert from "./Alert";
@@ -99,43 +100,51 @@ const App = () => {
   };
 
   return (
-    <View style={styles.sectionCenter}>
-      {alert.show && <Alert list={list} removeAlert={removeAlert} {...alert} />}
-      <View style={styles.groceryForm}>
-        <Text style={styles.heading}>Shopify list</Text>
-        <View style={styles.formControl}>
-          <TextInput
-            placeholder="e.g. eggs"
-            style={styles.grocery}
-            value={name}
-            onChangeText={(text) => setName(text)}
-          />
-          <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
-            <Text style={styles.submitText}>
-              {isEditing ? "Edit" : "Submit"}
-            </Text>
-          </TouchableOpacity>
+    <ScrollView style={styles.container}>
+      <View style={styles.sectionCenter}>
+        {alert.show && (
+          <Alert list={list} removeAlert={removeAlert} {...alert} />
+        )}
+        <View style={styles.groceryForm}>
+          <Text style={styles.heading}>Shopify list</Text>
+          <View style={styles.formControl}>
+            <TextInput
+              placeholder="e.g. eggs"
+              style={styles.grocery}
+              value={name}
+              onChangeText={(text) => setName(text)}
+            />
+            <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
+              <Text style={styles.submitText}>
+                {isEditing ? "Edit" : "Submit"}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
+        {list.length > 0 && (
+          <View style={styles.groceryContainer}>
+            <List editItem={editItem} removeItem={removeItem} items={list} />
+            <TouchableOpacity style={styles.clearBtn} onPress={clearItems}>
+              <Text style={styles.clearText}>Clear items</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
-      {list.length > 0 && (
-        <View style={styles.groceryContainer}>
-          <List editItem={editItem} removeItem={removeItem} items={list} />
-          <TouchableOpacity style={styles.clearBtn} onPress={clearItems}>
-            <Text style={styles.clearText}>Clear items</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: 40,
+  },
   sectionCenter: {
     backgroundColor: "rgba(255, 255, 255, 0.459)",
+    paddingTop: 40,
 
     borderRadius: 4,
     //boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)",
-    marginTop: 8,
+    //    marginTop: 8,
   },
   groceryForm: {
     marginBottom: 20,
@@ -188,17 +197,17 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
     width: 100,
     height: 24,
-    display: "flex",
-    alignItems: "center",
+
+    alignSelf: "center",
     backgroundColor: "transparent",
     borderColor: "transparent",
     color: "hsl(360, 71%, 66%)",
-    marginLeft: "auto",
+
     fontSize: 14,
     letterSpacing: 1,
-    cursor: "pointer",
     transition: "all 0.3s linear",
     marginTop: 20,
+    marginBottom: 20,
   },
   clearText: {
     color: "hsl(360, 71%, 66%)",
